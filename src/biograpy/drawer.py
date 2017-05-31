@@ -12,7 +12,7 @@ there's always a simpler solution you're not yet aware of...
 
 import matplotlib, warnings, operator
 matplotlib.use('Agg')
-import tracks 
+import biograpy.tracks 
 from matplotlib.font_manager import FontProperties
 
 warnings.simplefilter("ignore")
@@ -138,6 +138,7 @@ class Panel(object):
         '''estimate track height using track.drawn_lines
         find max and min x coords, and check for colorbar
         presence in at least one track'''
+        self.xmin = kwargs.get(self.xmin, 0)
         cbars = False
         self.drawn_lines = 0
         Xs =[]
