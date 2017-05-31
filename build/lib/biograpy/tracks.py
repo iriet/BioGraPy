@@ -150,7 +150,7 @@ class BaseTrack(object):
         
         self.norm = kwargs.get('norm', None)# normalizing function, if None build one. could be any function taking a value an returning a float between 0 and 1
         if not self.norm:
-            self.norm = colors.normalize(vmin = self.min_score, vmax = self.max_score)
+            self.norm = colors.Normalize(vmin = self.min_score, vmax = self.max_score)
                 
         
         self.cm = cm.get_cmap(kwargs.get('cm', self.default_cm))
@@ -283,7 +283,10 @@ class BaseTrack(object):
                             
                         for iname, fname in enumerate(feat2draw.feat_name):
                             y=fname.get_position()[1]
+                            print(feat2draw.feat_name)
+                            print(fname)
                             feat2draw.feat_name[iname].set_y(y + self.Ycord)
+                            
                             current_x, current_y = fname.xytext
                             feat2draw.feat_name[iname].xytext = (current_x, current_y + self.Ycord)
                         draw_features.append(feat_numb)
@@ -348,7 +351,12 @@ class BaseTrack(object):
                         new_xy.append([x, y + self.Ycord])
                     patch.set_xy(new_xy)
                 elif isinstance(patch, Annotation):
+                    if not patch.xytxt:
+                    	patch.xytxt = patch.xy
+                    print('here')                
                     current_x, current_y = patch.xytext
+#                     print (patch.xytext)
+#
                     patch.xytext = (current_x, current_y + self.Ycord)
                 else:
                     try: 
@@ -376,7 +384,7 @@ class BaseTrack(object):
                         feat2draw.ec = feat2draw.fc
                 else:# color by feature number
                     if not feat2draw.cm_value:
-                        self.norm = colors.normalize(1,len(self.features)+1,)
+                        self.norm = colors.Normalize(1,len(self.features)+1,)
                         feat2draw.cm_value = feat_numb +1
                     feat2draw.fc = self.cm(self.norm(feat2draw.cm_value))
             feat2draw.draw_feature()
@@ -516,7 +524,7 @@ class PlotTrack(BaseTrack):
                     feat2draw.fc = self.cm(feat2draw.cm_value)
                 else:# color by feature number
                     if not feat2draw.cm_value:
-                        self.norm = colors.normalize(1,len(self.features)+1,)
+                        self.norm = colors.Normalize(1,len(self.features)+1,)
                         feat2draw.cm_value = feat_numb +1
                     feat2draw.fc = self.cm(self.norm(feat2draw.cm_value))
             feat2draw.draw_feature()
